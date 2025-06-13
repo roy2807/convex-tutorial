@@ -1,3 +1,6 @@
+// Import `useMutation` and `api` from Convex.
+import { useQuery, useMutation } from "convex/react";
+import { api } from "../convex/_generated/api";
 import { useEffect, useState } from "react";
 import { faker } from "@faker-js/faker";
 
@@ -5,19 +8,24 @@ import { faker } from "@faker-js/faker";
 const NAME = getOrSetFakeName();
 
 export default function App() {
-  const messages = [
-    { _id: "1", user: "Alice", body: "Good morning!" },
-    { _id: "2", user: NAME, body: "Beautiful sunrise today" },
-  ];
-  // TODO: Add mutation hook here.
 
+
+
+
+  
+ // Replace the `const messages = ...` line with the following
+ const messages = useQuery(api.chat.getMessages);
+console.log('messages',messages)
+  // Replace the "TODO: Add mutation hook here." with:
+  const sendMessage = useMutation(api.chat.sendMessage);
   const [newMessageText, setNewMessageText] = useState("");
 
   useEffect(() => {
-    // Make sure scrollTo works on button click in Chrome
+   
     setTimeout(() => {
       window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
     }, 0);
+
   }, [messages]);
 
   return (
@@ -41,8 +49,9 @@ export default function App() {
       <form
         onSubmit={async (e) => {
           e.preventDefault();
-          alert("Mutation not implemented yet");
-          setNewMessageText("");
+                   // Replace "alert("Mutation not implemented yet");" with:
+          await sendMessage({ user: NAME, body: newMessageText });
+          setNewMessageText('')
         }}
       >
         <input
